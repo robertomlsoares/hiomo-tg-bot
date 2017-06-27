@@ -1,2 +1,2 @@
-# hiomo-tg-bot
-Telegram bot that sends daily Sodexo menus of Hiomotie 32.
+# HiomoBot
+Telegram bot that sends the daily menu of the Sodexo restaurant on Hiomotie 32.
