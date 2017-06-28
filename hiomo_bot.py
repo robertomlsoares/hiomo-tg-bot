@@ -106,6 +106,7 @@ def foodfi(bot, update):
     message = _food_msg_fi()
     update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
 
+
 def open(bot, update):
     """
     Message containing opening hours of the restaurant. Hard coded because I'm lazy.
@@ -114,9 +115,9 @@ def open(bot, update):
     :param update: Telegram update event.
     """
 
-    update.message.reply_text(open_text)
+    update.message.reply_text(open_text, parse_mode=ParseMode.MARKDOWN)
 
-    
+
 def subscribe(bot, update, args, job_queue, chat_data):
     """
     This handler will subscribe a user to receive daily messages at 10:30 in the morning containing the complete menu
