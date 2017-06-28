@@ -24,7 +24,9 @@ from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-open_text = "test"
+open_text = """Summer Opening Hours 3.7. - 4.8.
+Restaurant Open: 8:00 - 14:30
+Lunch Served: 11:00 - 13:30"""
 help_text = """You can control me by sending me these commands:
 
 /food - I'll tell you the complete menu of the day.
@@ -294,6 +296,7 @@ def main():
     dispatcher.add_handler(CommandHandler('food', food))
     dispatcher.add_handler(CommandHandler('fooden', fooden))
     dispatcher.add_handler(CommandHandler('foodfi', foodfi))
+    dispatcher.add_handler(CommandHandler('open', open))
     dispatcher.add_handler(
         CommandHandler('subscribe', subscribe, pass_args=True, pass_job_queue=True, pass_chat_data=True))
     dispatcher.add_handler(CommandHandler('unsubscribe', unsubscribe, pass_chat_data=True))
