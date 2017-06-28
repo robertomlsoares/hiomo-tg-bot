@@ -11,7 +11,7 @@ import os
 from uuid import uuid4
 
 import requests
-from telegram import InlineQueryResultArticle
+from telegram import InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -148,13 +148,13 @@ def inlinequery(bot, update):
 
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="food",
-                                            input_message_content=_food_msg()))
+                                            input_message_content=InputTextMessageContent(_food_msg())))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="fooden",
-                                            input_message_content=_food_msg_en()))
+                                            input_message_content=InputTextMessageContent(_food_msg_en())))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="foodfi",
-                                            input_message_content=_food_msg_fi()))
+                                            input_message_content=InputTextMessageContent(_food_msg_fi())))
 
     update.inline_query.answer(results)
 
@@ -249,7 +249,7 @@ def _get_menu_today():
 
 def main():
     #: Remember to remove the real token when pushing to GitHub.
-    TOKEN = '403945443:AAEbrl3PMQvhm4cSkwkzexJavryDz88p-qs'
+    TOKEN = 'TOKEN'
     PORT = int(os.environ.get('PORT', '5000'))
 
     updater = Updater(TOKEN)
