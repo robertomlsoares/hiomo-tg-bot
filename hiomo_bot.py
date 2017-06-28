@@ -11,7 +11,7 @@ import os
 from uuid import uuid4
 
 import requests
-from telegram import InlineQueryResultArticle, InputTextMessageContent
+from telegram import InlineQueryResultArticle, InputTextMessageContent, ParseMode
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -69,7 +69,7 @@ def subscribed_food(bot, job):
     """
 
     message = _food_msg()
-    bot.send_message(job.context, text=message)
+    bot.send_message(job.context, text=message, parse_mode=ParseMode.MARKDOWN)
 
 
 def fooden(bot, update):
@@ -81,7 +81,7 @@ def fooden(bot, update):
     """
 
     message = _food_msg_en()
-    update.message.reply_text(message)
+    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
 
 
 def foodfi(bot, update):
@@ -93,7 +93,7 @@ def foodfi(bot, update):
     """
 
     message = _food_msg_fi()
-    update.message.reply_text(message)
+    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
 
 
 def subscribe(bot, update, args, job_queue, chat_data):
@@ -148,13 +148,16 @@ def inlinequery(bot, update):
 
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="food",
-                                            input_message_content=InputTextMessageContent(_food_msg())))
+                                            input_message_content=InputTextMessageContent(_food_msg()),
+                                            parse_mode=ParseMode.MARKDOWN))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="fooden",
-                                            input_message_content=InputTextMessageContent(_food_msg_en())))
+                                            input_message_content=InputTextMessageContent(_food_msg_en()),
+                                            parse_mode=ParseMode.MARKDOWN))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="foodfi",
-                                            input_message_content=InputTextMessageContent(_food_msg_fi())))
+                                            input_message_content=InputTextMessageContent(_food_msg_fi()),
+                                            parse_mode=ParseMode.MARKDOWN))
 
     update.inline_query.answer(results)
 
@@ -185,8 +188,12 @@ def _food_msg():
         title_fi = course.get('title_fi', 'NA')
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
+        category = course.get('category', None)
 
-        message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
+        if category == 'Dessert':
+            message += '\n*Dessert:* %s.\n%s. %s\n' % (title_fi, title_en, properties)
+        else:
+            message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
     if message == '':
         message = 'No menu available today. Sorry!'
@@ -206,8 +213,12 @@ def _food_msg_en():
     for course in menu.get('courses', []):
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
+        category = course.get('category', None)
 
-        message += '\n%s. %s\n' % (title_en, properties)
+        if category == 'Dessert':
+            message += '\n*Dessert:* %s. %s\n' % (title_en, properties)
+        else:
+            message += '\n%s. %s\n' % (title_en, properties)
 
     if message == '':
         message = 'No menu available today. Sorry!'
@@ -226,8 +237,12 @@ def _food_msg_fi():
     for course in menu.get('courses', []):
         title_fi = course.get('title_fi', 'NA')
         properties = course.get('properties', 'NA')
+        category = course.get('category', None)
 
-        message += '\n%s. %s\n' % (title_fi, properties)
+        if category == 'Dessert':
+            message += '\n*Dessert:* %s. %s\n' % (title_fi, properties)
+        else:
+            message += '\n%s. %s\n' % (title_fi, properties)
 
     if message == '':
         message = 'No menu available today. Sorry!'
