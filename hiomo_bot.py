@@ -186,7 +186,7 @@ def _food_msg():
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
 
-        message += '\nTitle (FI): %s.\nTitle (EN): %s\nProperties: %s\n' % (title_fi, title_en, properties)
+        message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
     if message == '':
         message = 'No menu available today. Sorry!'
@@ -207,7 +207,7 @@ def _food_msg_en():
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
 
-        message += '\nTitle: %s\nProperties: %s\n' % (title_en, properties)
+        message += '\n%s. %s\n' % (title_en, properties)
 
     if message == '':
         message = 'No menu available today. Sorry!'
@@ -227,7 +227,7 @@ def _food_msg_fi():
         title_fi = course.get('title_fi', 'NA')
         properties = course.get('properties', 'NA')
 
-        message += '\nTitle: %s\nProperties: %s\n' % (title_fi, properties)
+        message += '\n%s. %s\n' % (title_fi, properties)
 
     if message == '':
         message = 'No menu available today. Sorry!'
