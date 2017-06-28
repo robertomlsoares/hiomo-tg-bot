@@ -249,7 +249,7 @@ def _get_menu_today():
 
 def main():
     #: Remember to remove the real token when pushing to GitHub.
-    TOKEN = 'TOKEN'
+    TOKEN = '403945443:AAEbrl3PMQvhm4cSkwkzexJavryDz88p-qs'
     PORT = int(os.environ.get('PORT', '5000'))
 
     updater = Updater(TOKEN)
