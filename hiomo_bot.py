@@ -32,6 +32,7 @@ help_text = """You can control me by sending me these commands:
 /food - I'll tell you the complete menu of the day.
 /fooden - I'll tell you the complete menu of the day in English only.
 /foodfi - I'll tell you the complete menu of the day in Finnish only.
+/foodtomorrow - I'll tell you the complete menu of tomorrow.
 /open - I'll tell you the opening hours of the staff restaurant.
 /subscribe - I'll send you a message everyday with the complete menu of the day.
 /unsubscribe - I'll stop sending you a message everyday."""
@@ -68,6 +69,18 @@ def food(bot, update):
     """
 
     message = _food_msg()
+    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
+
+
+def food_tomorrow(bot, update):
+    """
+    Message with the complete menu of tomorrow in both English and Finnish.
+
+    :param bot: Bot object.
+    :param update: Telegram update event.
+    """
+
+    message = _food_msg_tomorrow()
     update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
 
 
@@ -181,6 +194,11 @@ def inlinequery(bot, update):
                                             input_message_content=InputTextMessageContent(_food_msg_fi()),
                                             parse_mode=ParseMode.MARKDOWN, description='The menu in Finnish only.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
+                                            title="foodtomorrow",
+                                            input_message_content=InputTextMessageContent(_food_msg_tomorrow()),
+                                            parse_mode=ParseMode.MARKDOWN,
+                                            description='The complete menu of tomorrow.'))
+    results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="open",
                                             input_message_content=InputTextMessageContent(open_text),
                                             parse_mode=ParseMode.MARKDOWN, description='The opening hours.'))
@@ -223,6 +241,32 @@ def _food_msg():
 
     if message == '':
         message = 'No menu available today. Sorry!'
+    return message
+
+
+def _food_msg_tomorrow():
+    """
+    Helper function for the message string of the menu.
+
+    :return: Menu of tomorrow in both English and Finnish.
+    """
+
+    menu = _get_menu_tomorrow()
+
+    message = ''
+    for course in menu.get('courses', []):
+        title_fi = course.get('title_fi', 'NA')
+        title_en = course.get('title_en', 'NA')
+        properties = course.get('properties', 'NA')
+        category = course.get('category', None)
+
+        if category == 'Dessert':
+            message += '\n*Dessert:* %s.\n%s. %s\n' % (title_fi, title_en, properties)
+        else:
+            message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
+
+    if message == '':
+        message = 'No menu available tomorrow. Sorry!'
     return message
 
 
@@ -288,6 +332,20 @@ def _get_menu_today():
     return r.json()
 
 
+def _get_menu_tomorrow():
+    """
+    Sends a GET request to receive the Sodexo menu of tomorrow of Hiomotie 32.
+
+    :return: Response of the request in JSON.
+    """
+
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+    url = 'http://www.sodexo.fi/ruokalistat/output/daily_json/89/%s/%s/%s/fi' % (
+        tomorrow.year, tomorrow.month, tomorrow.day)
+    r = requests.get(url)
+    return r.json()
+
+
 def main():
     #: Remember to remove the real token when pushing to GitHub.
     TOKEN = 'TOKEN'
@@ -301,6 +359,7 @@ def main():
     dispatcher.add_handler(CommandHandler('food', food))
     dispatcher.add_handler(CommandHandler('fooden', fooden))
     dispatcher.add_handler(CommandHandler('foodfi', foodfi))
+    dispatcher.add_handler(CommandHandler('foodtomorrow', food_tomorrow))
     dispatcher.add_handler(CommandHandler('open', open))
     dispatcher.add_handler(
         CommandHandler('subscribe', subscribe, pass_args=True, pass_job_queue=True, pass_chat_data=True))
