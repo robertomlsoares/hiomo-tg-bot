@@ -172,6 +172,10 @@ def inlinequery(bot, update):
                                             title="foodfi",
                                             input_message_content=InputTextMessageContent(_food_msg_fi()),
                                             parse_mode=ParseMode.MARKDOWN))
+    results.append(InlineQueryResultArticle(id=uuid4(),
+                                            title="open",
+                                            input_message_content=InputTextMessageContent(open_text),
+                                            parse_mode=ParseMode.MARKDOWN))
 
     update.inline_query.answer(results)
 
