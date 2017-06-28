@@ -69,7 +69,7 @@ def food(bot, update):
     """
 
     message = _food_msg()
-    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
 
 def food_tomorrow(bot, update):
@@ -81,7 +81,7 @@ def food_tomorrow(bot, update):
     """
 
     message = _food_msg_tomorrow()
-    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
 
 def subscribed_food(bot, job):
@@ -93,7 +93,7 @@ def subscribed_food(bot, job):
     """
 
     message = _food_msg()
-    bot.send_message(job.context, text=message, parse_mode=ParseMode.MARKDOWN)
+    bot.send_message(job.context, text=message, parse_mode=ParseMode.HTML)
 
 
 def fooden(bot, update):
@@ -105,7 +105,7 @@ def fooden(bot, update):
     """
 
     message = _food_msg_en()
-    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
 
 def foodfi(bot, update):
@@ -117,7 +117,7 @@ def foodfi(bot, update):
     """
 
     message = _food_msg_fi()
-    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
 
 def open(bot, update):
@@ -128,7 +128,7 @@ def open(bot, update):
     :param update: Telegram update event.
     """
 
-    update.message.reply_text(open_text, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(open_text, parse_mode=ParseMode.HTML)
 
 
 def subscribe(bot, update, args, job_queue, chat_data):
@@ -184,24 +184,24 @@ def inlinequery(bot, update):
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="food",
                                             input_message_content=InputTextMessageContent(_food_msg()),
-                                            parse_mode=ParseMode.MARKDOWN, description='The complete menu of the day.'))
+                                            parse_mode=ParseMode.HTML, description='The complete menu of the day.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="fooden",
                                             input_message_content=InputTextMessageContent(_food_msg_en()),
-                                            parse_mode=ParseMode.MARKDOWN, description='The menu in English only.'))
+                                            parse_mode=ParseMode.HTML, description='The menu in English only.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="foodfi",
                                             input_message_content=InputTextMessageContent(_food_msg_fi()),
-                                            parse_mode=ParseMode.MARKDOWN, description='The menu in Finnish only.'))
+                                            parse_mode=ParseMode.HTML, description='The menu in Finnish only.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="foodtomorrow",
                                             input_message_content=InputTextMessageContent(_food_msg_tomorrow()),
-                                            parse_mode=ParseMode.MARKDOWN,
+                                            parse_mode=ParseMode.HTML,
                                             description='The complete menu of tomorrow.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="open",
                                             input_message_content=InputTextMessageContent(open_text),
-                                            parse_mode=ParseMode.MARKDOWN, description='The opening hours.'))
+                                            parse_mode=ParseMode.HTML, description='The opening hours.'))
 
     update.inline_query.answer(results)
 
@@ -235,7 +235,7 @@ def _food_msg():
         category = course.get('category', None)
 
         if category == 'Dessert':
-            message += '\n*Dessert:* %s.\n%s. %s\n' % (title_fi, title_en, properties)
+            message += '\nDessert: %s.\n%s. %s\n' % (title_fi, title_en, properties)
         else:
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
@@ -261,7 +261,7 @@ def _food_msg_tomorrow():
         category = course.get('category', None)
 
         if category == 'Dessert':
-            message += '\n*Dessert:* %s.\n%s. %s\n' % (title_fi, title_en, properties)
+            message += '\nDessert: %s.\n%s. %s\n' % (title_fi, title_en, properties)
         else:
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
@@ -286,7 +286,7 @@ def _food_msg_en():
         category = course.get('category', None)
 
         if category == 'Dessert':
-            message += '\n*Dessert:* %s. %s\n' % (title_en, properties)
+            message += '\nDessert: %s. %s\n' % (title_en, properties)
         else:
             message += '\n%s. %s\n' % (title_en, properties)
 
@@ -310,7 +310,7 @@ def _food_msg_fi():
         category = course.get('category', None)
 
         if category == 'Dessert':
-            message += '\n*Dessert:* %s. %s\n' % (title_fi, properties)
+            message += '\nDessert: %s. %s\n' % (title_fi, properties)
         else:
             message += '\n%s. %s\n' % (title_fi, properties)
 
