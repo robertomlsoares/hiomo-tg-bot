@@ -26,4 +26,4 @@ HiomoBot will also answer inline queries so you don't need to add him to your gr
 
 **@hiomo_bot foodfi** - Tells you the menu of the day in Finnish only.
 
-**@hiomo_bot open** - Tells you the opening hours.
+**@hiomo_bot open** - Tells you the opening hours of the restaurant.
