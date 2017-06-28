@@ -2,7 +2,14 @@
 # coding: utf-8
 
 """
-HiomoBot will send daily Telegram messages to subscribers containing the Sodexo menu of the current day.
+    hiomo_bot.py
+    ~~~~~~~~~~~~
+
+    HiomoBot is a Telegram bot that will send you messages containing the lunch menu of the day from the
+    Hiomotie 32 Sodexo restaurant.
+
+    :copyright: (c) 2017 by Roberto Soares, Minna Svartbäck
+    :license: MIT
 """
 
 import datetime
