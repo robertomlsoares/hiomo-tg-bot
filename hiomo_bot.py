@@ -24,9 +24,9 @@ from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-open_text = """Summer Opening Hours 3.7. - 4.8.
-Restaurant Open: 8:00 - 14:30
-Lunch Served: 11:00 - 13:30"""
+open_text = """Summer Opening Hours 3.7.2017 - 4.8.2017.
+Restaurant Open: 8:00 - 14:30.
+Lunch Served: 11:00 - 13:30."""
 help_text = """You can control me by sending me these commands:
 
 /food - I'll tell you the complete menu of the day.
@@ -171,19 +171,19 @@ def inlinequery(bot, update):
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="food",
                                             input_message_content=InputTextMessageContent(_food_msg()),
-                                            parse_mode=ParseMode.MARKDOWN))
+                                            parse_mode=ParseMode.MARKDOWN, description='The complete menu of the day.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="fooden",
                                             input_message_content=InputTextMessageContent(_food_msg_en()),
-                                            parse_mode=ParseMode.MARKDOWN))
+                                            parse_mode=ParseMode.MARKDOWN, description='The menu in English only.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="foodfi",
                                             input_message_content=InputTextMessageContent(_food_msg_fi()),
-                                            parse_mode=ParseMode.MARKDOWN))
+                                            parse_mode=ParseMode.MARKDOWN, description='The menu in Finnish only.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="open",
                                             input_message_content=InputTextMessageContent(open_text),
-                                            parse_mode=ParseMode.MARKDOWN))
+                                            parse_mode=ParseMode.MARKDOWN, description='The opening hours.'))
 
     update.inline_query.answer(results)
 
