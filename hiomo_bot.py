@@ -57,7 +57,7 @@ def food(bot, update):
     """
 
     message = _food_msg()
-    update.message.reply_text(message)
+    update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
 
 
 def subscribed_food(bot, job):
