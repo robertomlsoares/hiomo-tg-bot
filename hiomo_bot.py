@@ -5,11 +5,14 @@
 HiomoBot will send daily Telegram messages to subscribers containing the Sodexo menu of the current day.
 """
 
-from telegram.ext import Updater, CommandHandler, Job
-import logging
-import requests
 import datetime
+import logging
 import os
+from uuid import uuid4
+
+import requests
+from telegram import InlineQueryResultArticle
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -53,18 +56,7 @@ def food(bot, update):
     :param update: Telegram update event.
     """
 
-    menu = _get_menu_today()
-
-    message = ''
-    for course in menu.get('courses', []):
-        title_fi = course.get('title_fi', 'NA')
-        title_en = course.get('title_en', 'NA')
-        properties = course.get('properties', 'NA')
-
-        message += '\nTitle (FI): %s.\nTitle (EN): %s\nProperties: %s\n' % (title_fi, title_en, properties)
-
-    if message == '':
-        message = 'No menu available today. Sorry!'
+    message = _food_msg()
     update.message.reply_text(message)
 
 
@@ -76,18 +68,7 @@ def subscribed_food(bot, job):
     :param job: Job object.
     """
 
-    menu = _get_menu_today()
-
-    message = ''
-    for course in menu.get('courses', []):
-        title_fi = course.get('title_fi', 'NA')
-        title_en = course.get('title_en', 'NA')
-        properties = course.get('properties', 'NA')
-
-        message += '\nTitle (FI): %s.\nTitle (EN): %s\nProperties: %s\n' % (title_fi, title_en, properties)
-
-    if message == '':
-        message = 'No menu available today. Sorry!'
+    message = _food_msg()
     bot.send_message(job.context, text=message)
 
 
@@ -99,17 +80,7 @@ def fooden(bot, update):
     :param update: Telegram update event.
     """
 
-    menu = _get_menu_today()
-
-    message = ''
-    for course in menu.get('courses', []):
-        title_en = course.get('title_en', 'NA')
-        properties = course.get('properties', 'NA')
-
-        message += '\nTitle: %s\nProperties: %s\n' % (title_en, properties)
-
-    if message == '':
-        message = 'No menu available today. Sorry!'
+    message = _food_msg_en()
     update.message.reply_text(message)
 
 
@@ -121,17 +92,7 @@ def foodfi(bot, update):
     :param update: Telegram update event.
     """
 
-    menu = _get_menu_today()
-
-    message = ''
-    for course in menu.get('courses', []):
-        title_fi = course.get('title_fi', 'NA')
-        properties = course.get('properties', 'NA')
-
-        message += '\nTitle: %s\nProperties: %s\n' % (title_fi, properties)
-
-    if message == '':
-        message = 'No menu available today. Sorry!'
+    message = _food_msg_fi()
     update.message.reply_text(message)
 
 
@@ -175,6 +136,29 @@ def unsubscribe(bot, update, chat_data):
     update.message.reply_text('You are now unsubscribed from HiomoBot.')
 
 
+def inlinequery(bot, update):
+    """
+    Handler that will answer inline queries.
+
+    :param bot: Bot object.
+    :param update: Telegram update event.
+    """
+
+    results = []
+
+    results.append(InlineQueryResultArticle(id=uuid4(),
+                                            title="food",
+                                            input_message_content=_food_msg()))
+    results.append(InlineQueryResultArticle(id=uuid4(),
+                                            title="fooden",
+                                            input_message_content=_food_msg_en()))
+    results.append(InlineQueryResultArticle(id=uuid4(),
+                                            title="foodfi",
+                                            input_message_content=_food_msg_fi()))
+
+    update.inline_query.answer(results)
+
+
 def error(bot, update, error):
     """
     Handler to log errors.
@@ -185,6 +169,69 @@ def error(bot, update, error):
     """
 
     logger.warning('Update "%s" caused error "%s"' % (update, error))
+
+
+def _food_msg():
+    """
+    Helper function for the message string of the menu.
+
+    :return: Menu of the day in both English and Finnish.
+    """
+
+    menu = _get_menu_today()
+
+    message = ''
+    for course in menu.get('courses', []):
+        title_fi = course.get('title_fi', 'NA')
+        title_en = course.get('title_en', 'NA')
+        properties = course.get('properties', 'NA')
+
+        message += '\nTitle (FI): %s.\nTitle (EN): %s\nProperties: %s\n' % (title_fi, title_en, properties)
+
+    if message == '':
+        message = 'No menu available today. Sorry!'
+    return message
+
+
+def _food_msg_en():
+    """
+    Helper function for the message string of the menu in English.
+
+    :return: Menu of the day in English.
+    """
+
+    menu = _get_menu_today()
+
+    message = ''
+    for course in menu.get('courses', []):
+        title_en = course.get('title_en', 'NA')
+        properties = course.get('properties', 'NA')
+
+        message += '\nTitle: %s\nProperties: %s\n' % (title_en, properties)
+
+    if message == '':
+        message = 'No menu available today. Sorry!'
+    return message
+
+
+def _food_msg_fi():
+    """
+    Helper function for the message string of the menu in Finnish.
+
+    :return: Menu of the day in Finnish.
+    """
+    menu = _get_menu_today()
+
+    message = ''
+    for course in menu.get('courses', []):
+        title_fi = course.get('title_fi', 'NA')
+        properties = course.get('properties', 'NA')
+
+        message += '\nTitle: %s\nProperties: %s\n' % (title_fi, properties)
+
+    if message == '':
+        message = 'No menu available today. Sorry!'
+    return message
 
 
 def _get_menu_today():
@@ -216,6 +263,8 @@ def main():
     dispatcher.add_handler(
         CommandHandler('subscribe', subscribe, pass_args=True, pass_job_queue=True, pass_chat_data=True))
     dispatcher.add_handler(CommandHandler('unsubscribe', unsubscribe, pass_chat_data=True))
+
+    dispatcher.add_handler(InlineQueryHandler(inlinequery))
 
     dispatcher.add_error_handler(error)
 
