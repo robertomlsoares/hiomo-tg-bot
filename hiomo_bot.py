@@ -24,11 +24,13 @@ from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+open_text = "test"
 help_text = """You can control me by sending me these commands:
 
 /food - I'll tell you the complete menu of the day.
 /fooden - I'll tell you the complete menu of the day in English only.
 /foodfi - I'll tell you the complete menu of the day in Finnish only.
+/open - I'll tell you the opening hours of the staff restaurant.
 /subscribe - I'll send you a message everyday with the complete menu of the day.
 /unsubscribe - I'll stop sending you a message everyday."""
 
@@ -102,7 +104,17 @@ def foodfi(bot, update):
     message = _food_msg_fi()
     update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN)
 
+def open(bot, update):
+    """
+    Message containing opening hours of the restaurant. Hard coded because I'm lazy.
 
+    :param bot: Bot object.
+    :param update: Telegram update event.
+    """
+
+    update.message.reply_text(open_text)
+
+    
 def subscribe(bot, update, args, job_queue, chat_data):
     """
     This handler will subscribe a user to receive daily messages at 10:30 in the morning containing the complete menu
