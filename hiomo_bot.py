@@ -227,7 +227,7 @@ def _food_msg():
 
     menu = _get_menu_today()
 
-    message = ''
+    message = 'Today - %s' % (datetime.date.today().strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
         title_fi = course.get('title_fi', 'NA')
         title_en = course.get('title_en', 'NA')
@@ -240,7 +240,7 @@ def _food_msg():
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
     if message == '':
-        message = 'No menu available today. Sorry!'
+        message = '\nNo menu available today. Sorry!'
     return message
 
 
@@ -253,7 +253,7 @@ def _food_msg_tomorrow():
 
     menu = _get_menu_tomorrow()
 
-    message = ''
+    message = 'Tomorrow - %s' % ((datetime.date.today() + datetime.timedelta(days=1)).strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
         title_fi = course.get('title_fi', 'NA')
         title_en = course.get('title_en', 'NA')
@@ -266,7 +266,7 @@ def _food_msg_tomorrow():
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
     if message == '':
-        message = 'No menu available tomorrow. Sorry!'
+        message = '\nNo menu available tomorrow. Sorry!'
     return message
 
 
@@ -279,7 +279,7 @@ def _food_msg_en():
 
     menu = _get_menu_today()
 
-    message = ''
+    message = 'Today - %s' % (datetime.date.today().strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
@@ -291,7 +291,7 @@ def _food_msg_en():
             message += '\n%s. %s\n' % (title_en, properties)
 
     if message == '':
-        message = 'No menu available today. Sorry!'
+        message = '\nNo menu available today. Sorry!'
     return message
 
 
@@ -301,9 +301,10 @@ def _food_msg_fi():
 
     :return: Menu of the day in Finnish.
     """
+
     menu = _get_menu_today()
 
-    message = ''
+    message = 'Today - %s' % (datetime.date.today().strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
         title_fi = course.get('title_fi', 'NA')
         properties = course.get('properties', 'NA')
@@ -315,7 +316,7 @@ def _food_msg_fi():
             message += '\n%s. %s\n' % (title_fi, properties)
 
     if message == '':
-        message = 'No menu available today. Sorry!'
+        message = '\nNo menu available today. Sorry!'
     return message
 
 
