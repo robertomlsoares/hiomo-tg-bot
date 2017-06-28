@@ -289,6 +289,7 @@ def main():
     dispatcher.add_handler(CommandHandler('food', food))
     dispatcher.add_handler(CommandHandler('fooden', fooden))
     dispatcher.add_handler(CommandHandler('foodfi', foodfi))
+    dispatcher.add_handler(CommandHandler('open', open))
     dispatcher.add_handler(
         CommandHandler('subscribe', subscribe, pass_args=True, pass_job_queue=True, pass_chat_data=True))
     dispatcher.add_handler(CommandHandler('unsubscribe', unsubscribe, pass_chat_data=True))
