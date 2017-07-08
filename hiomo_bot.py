@@ -183,25 +183,29 @@ def inlinequery(bot, update):
 
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="food",
-                                            input_message_content=InputTextMessageContent(_food_msg()),
-                                            parse_mode=ParseMode.HTML, description='The complete menu of the day.'))
+                                            input_message_content=InputTextMessageContent(_food_msg(),
+                                                                                          parse_mode=ParseMode.HTML),
+                                            description='The complete menu of the day.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="fooden",
-                                            input_message_content=InputTextMessageContent(_food_msg_en()),
-                                            parse_mode=ParseMode.HTML, description='The menu in English only.'))
+                                            input_message_content=InputTextMessageContent(_food_msg_en(),
+                                                                                          parse_mode=ParseMode.HTML),
+                                            description='The menu in English only.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="foodfi",
-                                            input_message_content=InputTextMessageContent(_food_msg_fi()),
-                                            parse_mode=ParseMode.HTML, description='The menu in Finnish only.'))
+                                            input_message_content=InputTextMessageContent(_food_msg_fi(),
+                                                                                          parse_mode=ParseMode.HTML),
+                                            description='The menu in Finnish only.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="foodtomorrow",
-                                            input_message_content=InputTextMessageContent(_food_msg_tomorrow()),
-                                            parse_mode=ParseMode.HTML,
+                                            input_message_content=InputTextMessageContent(_food_msg_tomorrow(),
+                                                                                          parse_mode=ParseMode.HTML),
                                             description='The complete menu of tomorrow.'))
     results.append(InlineQueryResultArticle(id=uuid4(),
                                             title="open",
-                                            input_message_content=InputTextMessageContent(open_text),
-                                            parse_mode=ParseMode.HTML, description='The opening hours.'))
+                                            input_message_content=InputTextMessageContent(open_text,
+                                                                                          parse_mode=ParseMode.HTML),
+                                            description='The opening hours.'))
 
     update.inline_query.answer(results)
 
