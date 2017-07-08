@@ -230,9 +230,11 @@ def _food_msg():
     """
 
     menu = _get_menu_today()
+    has_menu = False
 
     message = 'Today - %s' % (datetime.date.today().strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
+        has_menu = True
         title_fi = course.get('title_fi', 'NA')
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
@@ -243,7 +245,7 @@ def _food_msg():
         else:
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
-    if message == '':
+    if not has_menu:
         message = '\nNo menu available today. Sorry!'
     return message
 
@@ -256,9 +258,11 @@ def _food_msg_tomorrow():
     """
 
     menu = _get_menu_tomorrow()
+    has_menu = False
 
     message = 'Tomorrow - %s' % ((datetime.date.today() + datetime.timedelta(days=1)).strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
+        has_menu = True
         title_fi = course.get('title_fi', 'NA')
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
@@ -269,7 +273,7 @@ def _food_msg_tomorrow():
         else:
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
-    if message == '':
+    if not has_menu:
         message = '\nNo menu available tomorrow. Sorry!'
     return message
 
@@ -282,9 +286,11 @@ def _food_msg_en():
     """
 
     menu = _get_menu_today()
+    has_menu = False
 
     message = 'Today - %s' % (datetime.date.today().strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
+        has_menu = True
         title_en = course.get('title_en', 'NA')
         properties = course.get('properties', 'NA')
         category = course.get('category', None)
@@ -294,7 +300,7 @@ def _food_msg_en():
         else:
             message += '\n%s. %s\n' % (title_en, properties)
 
-    if message == '':
+    if not has_menu:
         message = '\nNo menu available today. Sorry!'
     return message
 
@@ -307,9 +313,11 @@ def _food_msg_fi():
     """
 
     menu = _get_menu_today()
+    has_menu = False
 
     message = 'Today - %s' % (datetime.date.today().strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
+        has_menu = True
         title_fi = course.get('title_fi', 'NA')
         properties = course.get('properties', 'NA')
         category = course.get('category', None)
@@ -319,7 +327,7 @@ def _food_msg_fi():
         else:
             message += '\n%s. %s\n' % (title_fi, properties)
 
-    if message == '':
+    if not has_menu:
         message = '\nNo menu available today. Sorry!'
     return message
 
