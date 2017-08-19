@@ -21,19 +21,16 @@ import requests
 from telegram import InlineQueryResultArticle, InputTextMessageContent, ParseMode
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-open_text = """Summer Opening Hours 3.7.2017 - 4.8.2017.
-Restaurant Open: 8:00 - 14:30.
-Lunch Served: 11:00 - 13:30."""
 help_text = """You can control me by sending me these commands:
 
 /food - I'll tell you the complete menu of the day.
 /fooden - I'll tell you the complete menu of the day in English only.
 /foodfi - I'll tell you the complete menu of the day in Finnish only.
 /foodtomorrow - I'll tell you the complete menu of tomorrow.
-/open - I'll tell you the opening hours of the staff restaurant.
 /subscribe - I'll send you a message everyday with the complete menu of the day.
 /unsubscribe - I'll stop sending you a message everyday."""
 
@@ -120,17 +117,6 @@ def foodfi(bot, update):
     update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
 
-def open(bot, update):
-    """
-    Message containing opening hours of the restaurant. Hard coded because I'm lazy.
-
-    :param bot: Bot object.
-    :param update: Telegram update event.
-    """
-
-    update.message.reply_text(open_text, parse_mode=ParseMode.HTML)
-
-
 def subscribe(bot, update, args, job_queue, chat_data):
     """
     This handler will subscribe a user to receive daily messages at 10:30 in the morning containing the complete menu
@@ -144,10 +130,12 @@ def subscribe(bot, update, args, job_queue, chat_data):
     """
 
     chat_id = update.message.chat_id
-    job = job_queue.run_daily(subscribed_food, datetime.time(10, 30), (0, 1, 2, 3, 4), context=chat_id)
+    job = job_queue.run_daily(subscribed_food, datetime.time(
+        10, 30), (0, 1, 2, 3, 4), context=chat_id)
     chat_data['job'] = job
 
-    update.message.reply_text('You are now subscribed to HiomoBot! You will receive the menu everyday at 10:30 AM.')
+    update.message.reply_text(
+        'You are now subscribed to HiomoBot! You will receive the menu everyday at 10:30 AM.')
 
 
 def unsubscribe(bot, update, chat_data):
@@ -160,7 +148,8 @@ def unsubscribe(bot, update, chat_data):
     """
 
     if 'job' not in chat_data:
-        update.message.reply_text('You can\'t unsubscribe if you have no subscription.')
+        update.message.reply_text(
+            'You can\'t unsubscribe if you have no subscription.')
         return
 
     job = chat_data['job']
@@ -201,11 +190,6 @@ def inlinequery(bot, update):
                                             input_message_content=InputTextMessageContent(_food_msg_tomorrow(),
                                                                                           parse_mode=ParseMode.HTML),
                                             description='The complete menu of tomorrow.'))
-    results.append(InlineQueryResultArticle(id=uuid4(),
-                                            title="open",
-                                            input_message_content=InputTextMessageContent(open_text,
-                                                                                          parse_mode=ParseMode.HTML),
-                                            description='The opening hours.'))
 
     update.inline_query.answer(results)
 
@@ -241,7 +225,8 @@ def _food_msg():
         category = course.get('category', None)
 
         if category == 'Dessert':
-            message += '\nDessert: %s.\n%s. %s\n' % (title_fi, title_en, properties)
+            message += '\nDessert: %s.\n%s. %s\n' % (
+                title_fi, title_en, properties)
         else:
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
@@ -260,7 +245,8 @@ def _food_msg_tomorrow():
     menu = _get_menu_tomorrow()
     has_menu = False
 
-    message = 'Tomorrow - %s' % ((datetime.date.today() + datetime.timedelta(days=1)).strftime('%d.%m.%Y'))
+    message = 'Tomorrow - %s' % ((datetime.date.today() +
+                                  datetime.timedelta(days=1)).strftime('%d.%m.%Y'))
     for course in menu.get('courses', []):
         has_menu = True
         title_fi = course.get('title_fi', 'NA')
@@ -269,7 +255,8 @@ def _food_msg_tomorrow():
         category = course.get('category', None)
 
         if category == 'Dessert':
-            message += '\nDessert: %s.\n%s. %s\n' % (title_fi, title_en, properties)
+            message += '\nDessert: %s.\n%s. %s\n' % (
+                title_fi, title_en, properties)
         else:
             message += '\n%s.\n%s. %s\n' % (title_fi, title_en, properties)
 
@@ -340,7 +327,8 @@ def _get_menu_today():
     """
 
     today = datetime.date.today()
-    url = 'http://www.sodexo.fi/ruokalistat/output/daily_json/89/%s/%s/%s/fi' % (today.year, today.month, today.day)
+    url = 'http://www.sodexo.fi/ruokalistat/output/daily_json/89/%s/%s/%s/fi' % (
+        today.year, today.month, today.day)
     r = requests.get(url)
     return r.json()
 
@@ -373,10 +361,10 @@ def main():
     dispatcher.add_handler(CommandHandler('fooden', fooden))
     dispatcher.add_handler(CommandHandler('foodfi', foodfi))
     dispatcher.add_handler(CommandHandler('foodtomorrow', food_tomorrow))
-    dispatcher.add_handler(CommandHandler('open', open))
     dispatcher.add_handler(
         CommandHandler('subscribe', subscribe, pass_args=True, pass_job_queue=True, pass_chat_data=True))
-    dispatcher.add_handler(CommandHandler('unsubscribe', unsubscribe, pass_chat_data=True))
+    dispatcher.add_handler(CommandHandler(
+        'unsubscribe', unsubscribe, pass_chat_data=True))
 
     dispatcher.add_handler(InlineQueryHandler(inlinequery))
 

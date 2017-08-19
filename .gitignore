@@ -101,4 +101,7 @@ ENV/
 .mypy_cache/
 
 # Idea
-.idea
+.idea/
+
+# Visual Studio Code
+.vscode/
